@@ -1,0 +1,1211 @@
+---
+title:  <h style="text-align:center"><img src="https://www.infoescola.com/wp-content/uploads/2018/05/UEPB.png" width="1200" height="360" p> "ANÁLISE DE SOBREVIDA DE PACIENTES COM CÂNCER DE PULMÃO"
+author: "joseferson da silva barreto"
+output:
+ html_document:
+    toc: true
+    toc_float: true
+    css: www/meu_cs.css
+---
+
+                             
+
+                            
+                            
+                            
+                            
+                              
+                                
+                                  
+                           
+                             
+                               
+                              
+                                 
+                                   
+                                        
+                                    
+                                      
+                                        
+                                        
+                                    
+                                     .  
+                                       
+                                         
+                                           
+                                           
+                            
+                              Professor:  Cleanderson Romualdo Fidelis
+                            
+                            
+                             Projeto final de análise de sobrevivência apresentado na
+                             última aula da disciplina . 
+
+  
+    
+      
+       
+       
+         
+           
+             
+                                 
+                                   
+                                     
+                                       
+                                         
+                                           
+                                             
+                                               
+                                                 
+                                                   
+                                                     
+                                                       
+                                                        
+                                                          
+                                                            
+                            
+                                        julho,25,2022                                               
+                                                                                     
+                                                                                                                           
+# Sumário 
+
+
+* Objetivo 
+
+*  Metodos 
+
+* Introdução
+
+*  Resultados
+
+
+
+*  Conclusão
+  
+    
+      
+        
+          
+             
+               
+                 
+ 
+                             
+
+                             
+                              . 
+
+  
+    
+      
+       
+       
+         
+           
+             
+                                 
+                                   
+                                     
+                                       
+                                         
+                                           
+                                             
+                                               
+                                                 
+                                                   
+                                                     
+                                                       
+                                                        
+                                                          
+                                                            
+                                                              
+                                                                
+                                                                  
+                                                                     
+                                                                        
+                                                                          
+                                                                            
+                                                                               
+                                                                                 
+                                                                                   
+                                                                                     
+                                                                                           
+                                                                                             
+                                                                                               
+                                                                                               .                  
+                     
+                       
+                         
+                           
+                             
+                               
+                                 
+                                   
+                                    
+                                     
+                                       
+                                         
+                                           
+                                             
+                                               
+                                                 
+                                                   
+                                                     
+                                                       
+                                                         
+                                                           
+                                                             
+                                                               
+                                                                 
+                                                                   
+                                                                    
+                                                                      
+                                                                        
+                                                                         
+                                                                           
+                                                                           
+## Objetivo
+
+O objetivo é avaliar  e observar o tempo até a morte dos individuos por  câncer 
+no pulmão.
+ O  estudo teve como objetivo estudar o tempo até a reincidência
+de morte por cancer no pulmão no estado de Minas Gerais, buscando a identificação de possíveis fatores
+que podem estar relacionados ao tempo até a reincidência desses indivíduos.
+
+
+## Metodo
+
+ Foi feito a análise exploratória e os tratamentos dos dados para buscar relações entre as variáveis , a  limpeza dos dados foi feita no software Rstudio ,utilizando a linguagem R para as demais análises. Para essa análise foi utilizado um banco de dados 
+ contendo informações sobre pacientes com câncer no estado de Minas Gerais  , após o tratamento dos dados foram adicionados duas novas variáveis  **meses** e  **falhas** , onde a variável **meses**  é referente ao número de meses até  a primeira falha acontecer ou seja , será nosso tempo observado, já a variável  **falhas** contém a informação se nosso evento falhou ou foi censurado(variável binária, 0 ou 1 ) onde 0 é caso tenha ocorrido um censura e 1 caso tenha ocorrido uma falha.
+ Foi utilizado o estimador de kaplan-meier , para fazer a comparação das curvas entre os grupos  usamos neste projeto o  teste log-rank .
+ 
+ 
+<!--  Relacionar os valores das Latências LV, LA, LC, LD, LE, LF e LO com o Score Semântico, -->
+<!-- e analisar em relação o grupo. -->
+<!--  Tentar explicar o Score Final a partir das varíaveis referentes ao exame e do grupo ao qual a criança pertence. -->
+<!--  Comparar os Scores segundo o grupo. -->
+
+# Introdução 
+
+
+
+O câncer de pulmão é uma das maiores causas de morte no mundo, sendo a primeira
+causa em morte por câncer entre homens no Brasil. A história natural da doença inclui
+elevada letalidade e evolução agressiva, quase sempre com o paciente chegando ao médico
+quando a doença já se encontra em fase avançada. Nos últimos 40 anos a taxa de sobrevida
+em neoplasias de pulmão melhorou em 8 %, nos Estados Unidos, apesar do avanço nas
+tecnologias de detecção precoce e no refinamento das técnicas de tratamento. Um desafio
+contínuo é descrever o papel das variáveis clínicas, assistenciais e demográficas dos pacientes
+com câncer de pulmão.
+
+A análise de sobrevivência é uma das áreas  da estatística que mais cresceu nas
+últimas duas décadas do século passado. A razão deste crescimento ´e o desenvolvimento e aprimoramento de técnicas estatísticas combinado com computadores cada
+vez mais velozes. Uma evidência quantitativa deste sucesso é o número  de aplicações
+de análise de sobrevivência em medicina.
+
+
+
+##   Representação dos Dados de Sobrevivência
+
+Os dados de sobrevivência para o indivÍduo $i$ $(i = 1, · · · , n)$ sob estudo, são representados, em geral, pelo par ($t_i$
+, $\delta_i$) sendo $t_i$ o tempo de falha ou de censura e $\delta_i$ a
+variável indicadora de falha ou censura, isto é 
+
+
+\[ \delta_i =
+  \begin{cases}
+    1      & \quad \text{se } t_i \text{ é um tempo de falha}\\
+    0  & \quad \text{se  } t_i \text{ é um tempo censurado.}
+  \end{cases}
+\]
+
+## Carregando os pacotes 
+
+Vamos iniciar carregando os pacotes que iremos utilizar 
+
+
+
+
+```{r,warning=FALSE,message=FALSE}
+library(tidyverse)
+
+#rm(list = ls())
+
+library(tidyverse)
+
+
+library(plotly)
+library(readxl)
+
+dados<-read.csv("analise_de_sobrevivencia.csv",sep = ";",encoding = "latin1")
+
+
+# table(dados$Descrição.da.Doenca)
+
+
+
+```
+
+
+
+
+
+```{r,echo=TRUE, ,message=FALSE}
+# dados %>%
+#  # dplyr::select(where(is.factor)) %>% 
+#   glimpse()
+ 
+pulmao<-dados %>% 
+  dplyr::filter(Descrição.da.Topografia =="PULMAO, SOE")
+
+pulmao$falhas<-pulmao$Tipo.do.Obito
+pulmao$falhas[pulmao$falhas == "CÂNCER"] <- "1"
+pulmao$falhas[pulmao$falhas == "NÃO CÂNCER"] <- "0"
+pulmao$falhas[pulmao$falhas == "SEM INFORMAÇÃO"] <- "0"
+pulmao$falhas[pulmao$falhas == ""] <- "0"
+
+
+
+```
+
+
+
+
+
+
+
+
+```{r,echo=FALSE,warning=FALSE,,message=FALSE}
+library(lubridate)
+
+
+#  vamos converter essa variável 
+pulmao$Código.do.Paciente<-as.character(pulmao$Código.do.Paciente)
+
+# codigo da profissão tbm é apenas um codigo
+
+#pulmao$Código.Profissão<-as.character(pulmao$Código.Profissão)
+
+
+# 
+# pulmao %>%
+#   dplyr::select(where(is.numeric)) %>%
+#   glimpse()
+# 
+# 
+# # fazendo o mesmo para código da morfologia 
+# 
+# 
+# pulmao$Código.da.Morfologia<-as.character(pulmao$Código.da.Morfologia)
+# 
+# pulmao %>%
+#   dplyr::select(where(is.numeric)) %>%
+#   glimpse() 
+
+```
+
+
+
+```{r}
+#pulmao %>% select(Idade) %>% table()
+#pulmao<-read.csv("pulmaonovot.csv",sep = ",")
+```
+
+## Convertendo os possíveis fatores 
+
+
+```{r,results='hide',warning=FALSE}
+#   sexo
+#   grau de instrução
+#   Estado civil 
+#   nome.profissão
+#   raca.cor 
+#   nacionalidade 
+#   cidade.endereço
+  # Descrição.da.Doenca.Infantil
+  # Código.da.Doenca.Infantil
+  # Indicador.de.Caso.Raro
+  # Meio.de.Diagnostico
+  # Status.Vital
+  # Metástase.à.distância
+
+
+pulmao$Sexo<- as.factor(pulmao$Sexo)
+
+# glimpse(pulmao)
+
+#c(pulmao$Sexo,pulmao$Nacionalidade)<-lapply(c(pulmao$Sexo,pulmao$Nacionalidade), as.factor)
+
+pulmao$Nacionalidade<- as.factor(pulmao$Nacionalidade)
+pulmao$Raca.Cor<- as.factor(pulmao$Raca.Cor)
+pulmao$Naturalidade<- as.factor(pulmao$Naturalidade)
+
+pulmao$Grau.de.Instrução<- as.factor(pulmao$Grau.de.Instrução)
+
+pulmao$Estado.Civil<- as.factor(pulmao$Estado.Civil)
+
+# pulmao %>%  select(
+#  Descrição.da.Morfologia
+# )  %>% table()
+
+pulmao$Descrição.da.Morfologia<- as.factor(pulmao$Descrição.da.Morfologia)
+#
+#  Descrição.da.Doenca
+# )  %>% table(
+
+
+pulmao$Descrição.da.Doenca<- as.factor(pulmao$Descrição.da.Doenca)
+pulmao$Descrição.da.Doenca.Adulto.Jovem<- as.factor(pulmao$Descrição.da.Doenca.Adulto.Jovem)
+pulmao$Descrição.da.Doenca.Infantil<- as.factor(pulmao$Descrição.da.Doenca.Infantil)
+pulmao$Indicador.de.Caso.Raro<- as.factor(pulmao$Indicador.de.Caso.Raro)
+pulmao$Meio.de.Diagnostico<- as.factor(pulmao$Meio.de.Diagnostico)
+pulmao$Extensão<- as.factor(pulmao$Extensão)
+pulmao$Tipo.do.Obito<- as.factor(pulmao$Tipo.do.Obito)
+pulmao$Nome.Profissão<- as.factor(pulmao$Nome.Profissão)
+
+
+pulmao <- pulmao %>% filter(pulmao$Extensão !='SEM INFORMAÇÃO' )
+```
+
+
+# Selecionando as Colunas que Iremos Utilizar
+
+
+
+
+```{r,echo=FALSE,warning=FALSE}
+
+#glimpse(pulmao)
+pulmao<- pulmao %>% select(Código.do.Paciente ,Sexo,Data.de.Nascimento, Idade,Raca.Cor,Descrição.da.Topografia,Código.da.Topografia,Descrição.da.Morfologia,
+             Descrição.da.Doenca,Indicador.de.Caso.Raro ,
+             Meio.de.Diagnostico,Tipo.do.Obito,Meio.de.Diagnostico,Meio.de.Diagnostico,
+             Status.Vital,Extensão, Tipo.do.Obito,Data.do.Óbito,Data.de.Último.Contato,
+             Data.de.Diagnostico,Data.do.Óbito.copia,dias,falhas)
+
+
+
+pulmao$Data.do.Óbito.copia<-pulmao$Data.do.Óbito
+
+
+# vamos criar uma coluna que vai verificar as datas onde data de ultimo diagnostico é maior que datava de obtio
+
+# install.packages("ExcelFunctionsR")
+# library(ExcelFunctionsR)
+# pulmao$Data.do.Óbito<-dmy(pulmao$Data.do.Óbito)
+# pulmao$Data.do.Óbito.copia<-dmy(pulmao$Data.do.Óbito.copia)
+# pulmao$Data.de.Último.Contato<-dmy(pulmao$Data.de.Último.Contato)
+# pulmao$Data.de.Diagnostico<-dmy(pulmao$Data.de.Diagnostico)
+#view(minha)
+# minha<-(str_replace_all(pulmao$Data.do.Óbito, "-",","))
+
+# pulmao$Data.de.Diagnostico<-(str_replace_all(pulmao$Data.de.Diagnostico, "-",","))
+# pulmao$Data.de.Último.Contato<-(str_replace_all(pulmao$Data.de.Último.Contato, "-",","))
+# pulmao$Data.do.Óbito.copia<-(str_replace_all(pulmao$Data.do.Óbito.copia, "-",","))
+# pulmao$Data.do.Óbito<-minha 
+# DATEDIF(as.Date(pulmao$Data.de.Último.Contato),as.Date(pulmao$Data.de.Diagnostico), "D")
+# 
+# 
+# DATEDIF(DATE(2020,1,1),DATE(2020,2,1),"m")
+# sendo 2 para maior e 4 para menorr 
+attach(pulmao)
+pulmao$verifica<-ifelse(pulmao$Data.de.Último.Contato> pulmao$Data.do.Óbito &pulmao$Data.do.Óbito=="", 2, 4)
+pu=pulmao %>% filter(verifica == "2")
+pi=pulmao %>% filter(verifica == "4")
+
+
+pu$dias<-difftime( dmy(pu$Data.de.Último.Contato), dmy(pu$Data.de.Diagnostico), units = "days")
+
+
+
+# fazendo a substituição na coluna dos dados pi 
+pi$Data.do.Óbito.copia<-pi$Data.do.Óbito
+
+pi$Data.do.Óbito.copia[pi$Data.do.Óbito.copia == ""] <- "25/03/2018"
+# pi$dias<-difftime( dmy(pi$Data.do.Óbito.copia), dmy(pi$Data.de.Diagnostico), units = "days")
+
+
+pi$dias<-difftime( dmy(pi$Data.do.Óbito.copia), dmy(pi$Data.de.Diagnostico), units = "days")
+
+
+pi<-pi %>% filter(dias!= "0")
+
+pu<-pu %>%filter(dias!= "0")
+ 
+
+pulmao<-rbind(pu,pi)
+
+#pulmao$Data.do.Óbito.copia[pulmao$Data.do.Óbito.copia == ""] <- "25/03/2018"
+#pulmao %>% filter(dias == 0)
+
+
+#writexl::write_xlsx(pulmao,"dados_final.xlsx",col_names = TRUE)
+
+write.csv(pulmao,"dados_final.csv",row.names = FALSE)
+#pulmao<-xlsx::read.xlsx("dados_final.xlsx",encoding="UTF-8")
+
+pulmao<-read.csv("dados_final.csv",encoding="UTF-8")
+
+
+pulmao$meses <-round(as.double(pulmao$dias)/30,0)
+t<-pulmao %>% filter(meses == '0' | meses=="1")
+
+pulmao <- pulmao %>% filter(meses != '0' &
+                            meses!="1")
+
+library(DT)
+library(ggplot2)
+library(ggalt)
+library(broom)
+library(gt)
+
+```
+
+
+#  Calculando  a taxa de censura
+  Antes de mais nada ,iremos  calcular a taxa de censura presente em nossos dados 
+  
+```{r}
+round(1 - mean(pulmao$falhas),3)
+
+#library(lubridate)
+
+
+
+```
+   nossa taxa de censura é de  aproximadamente 20,9% .
+  
+# Estimador de Kaplan-Meier
+
+ O Esttimador de Kaple-Meier é um estimador não-paramétrico 
+ onde a função de sobrevivência será dada da forma 
+ 
+ 
+ $$\hat{S}(t) =\frac{no. de observacões que não falharam até o tempo    (t)}{no. total de observações no estudo}$$
+
+
+```{r, warning=FALSE}
+#library(lubridate)
+
+#pulmao$meses<-as.integer(pulmao$meses)
+
+pulmao<- pulmao %>% filter(Extensão != "NÃO SE APLICA")
+pulmao$falhas<-as.numeric(pulmao$falhas)
+library(survival)
+
+ek <- survfit(Surv(pulmao$meses,pulmao$falhas)~1)
+#par(bg = '#1b1a3d')
+
+
+# plot(ek, lty=1, xlab="Tempo (meses)",
+#     # Symbol color
+#     col.main = "white",     # Title color
+#     col.sub = "white",       # Subtitle color
+#     col.lab = "white",    # X and Y-axis labels color
+#     col.axis = "white",   # Tick labels color
+#     fg = "white",
+#      ylab="S(t) Estimada", col = "white", 
+#      lwd = 2,main = "Curva de Sobrevivência ",conf.int=F)
+
+
+ plot(ek, lty=1, xlab="Tempo (meses)",
+#     # Symbol color
+#     col.main = "white",     # Title color
+#     col.sub = "white",       # Subtitle color
+#     col.lab = "white",    # X and Y-axis labels color
+#     col.axis = "white",   # Tick labels color
+#     fg = "white",
+     ylab="S(t) Estimada", col = 1, 
+     lwd = 2,main = "Curva de Sobrevivência ",conf.int=F)
+
+
+
+#plot(ek, lty=1, col = "blue",lwd = 2,conf.int = F)
+
+#install.packages("ggfortify")
+library(modelsummary)
+library(tidyverse)
+
+
+
+library(ggfortify)
+#fortify(ek)
+
+
+
+```
+
+
+```{r, warning=FALSE}
+```
+
+# Fazendo com Base o fator Extensão
+```{r,warning=FALSE}
+# Estimação da função de sobrevivência pelo método de Kaplan-Meier
+library(survival)
+pulmao$falhas<-as.numeric(pulmao$falhas)
+ekm_exp <- survfit(Surv(pulmao$meses,pulmao$falhas)~pulmao$Extensão)
+
+# pulmao[28]<-as.factor(pulmao[28])
+# resumo do Kaplan-Meier
+
+#summary(ekm_exp)
+
+
+
+# Gráfico de Kaplan-Meier
+
+
+
+
+# pulmao %>%
+#   dplyr::select(where(is.factor)) %>% 
+#    glimpse()
+
+# table(pulmao$Extensão)
+
+plot(ekm_exp, lty=c(2,1), xlab="Tempo (meses)",
+     # Symbol color
+#     col.main = "white",     # Title color
+#     col.sub = "white",       # Subtitle color
+#     col.lab = "white",    # X and Y-axis labels color
+#     col.axis = "white",   # Tick labels color
+#     fg = "white",
+     ylab="S(t) Estimada", col = 1:3, 
+     lwd = c(2,2),main = "Curva de Sobrevivência com Base no Estágio da Doença")
+legend(x = "topright",          # Position
+       c("IN SITU", "LOCALIZADO","METÁSTASE"),  # Legend texts
+       lty = c(2,1),           # Line types
+       col = c(1:3),           # Line colors
+       lwd = 2)
+
+
+
+
+# plot(ek, lty=1, xlab="Tempo (meses)",
+#     # Symbol color
+#     col.main = "white",     # Title color
+#     col.sub = "white",       # Subtitle color
+#     col.lab = "white",    # X and Y-axis labels color
+#     col.axis = "white",   # Tick labels color
+#     fg = "white",
+#      ylab="S(t) Estimada", col = "white", 
+#      lwd = 2,main = "Curva de Sobrevivência ",conf.int=F)
+
+
+# d_km <- tidy(ekm_exp)
+# p<-ggplot(d_km, aes(x = time, y = estimate, colour = strata)) +
+#   geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = strata),
+#               stat = 'stepribbon', alpha = .1, size = .1) +
+#   geom_step() +
+#   theme_bw(16)
+# 
+# 
+# library(plotly)
+# 
+# ggplotly(p)
+```
+
+Neste Gráfico podemos perceber que após 34 meses após o diagnostico que o paciente pussui  câncer é melhor pertencer ao grupo onde o câncer no pulmão está localizado,pois após 34  meses é o grupo que possui a maior probabilidade de sobrevivência, uma vez que  quando o câncer é localizado isso significa que
+não existe sinal de disseminação da doença.
+
+Além disso , os pacientes  que possuiem câncer  em metafase pussui a menor probabilidade de sobrevivência , tendo em vista que As células cancerosas se destacam do tumor original e viajam através da circulação sanguínea ou linfática, formando novos tumores. Esse processo é conhecido como metástase. 
+
+# Fazendo o Kaplan-Meier para o variável Sexo 
+
+```{r,warning=FALSE}
+KPS <- survfit(Surv(pulmao$meses,pulmao$falhas)~pulmao$Sexo)
+#par(bg = '#1b1a3d')
+
+plot(KPS, lty=c(2,1), xlab="Tempo (meses)",
+     ylab="S(t) Estimada", col = 2:4,
+    #   col.main = "white",     # Title color
+    # col.sub = "white",       # Subtitle color
+    # col.lab = "white",    # X and Y-axis labels color
+    # col.axis = "white",   # Tick labels color
+    # fg = "white",
+     lwd = c(2,2),main = "Curva de Sobrevivência com Base no Sexo")
+legend(x = "topright",          # Position
+       c("FEMININO", "MASCULINO"),  # Legend texts
+       lty = c(2,1),           # Line types
+       col = c(2:4),           # Line colors
+       lwd = 2)#bg= "white")
+
+#install.packages("broom")
+library(ggplot2)
+library(ggalt)
+library(broom)
+
+
+
+# d_km <- tidy(KPS)
+# p<-ggplot(d_km, aes(x = time, y = estimate, colour = strata)) +
+#   geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = strata),
+#               stat = 'stepribbon', alpha = .1, size = .1) +
+#   geom_step() +
+#   theme_bw(16)
+# 
+# 
+# library(plotly)
+# 
+# 
+# 
+#  ggplotly(p)
+```
+
+
+Pelos Gráficos acima podemos observar que após O quinto mês após ter cido feito o diagnóstico o grupo feminino começa apresentar uma maior probabilidade de sobrevivência 
+se comparado ao grupo masculino.
+
+
+
+
+
+
+# vamos comparar as curvas de sobrevivência dos grupos sexo
+
+## Teste log-rank
+
+O teste log-rank é apropriado quando a razão das funções de risco dos grupos a serem comparados é, aproximadamente, constante. A estatística do teste log-rank é a diferença entre o número observado de falhas em cada grupo e o correspondente número esperado de falhas sob a hipótese nula
+
+```{r,warning=FALSE}
+survdiff(Surv(pulmao$meses,pulmao$falhas)~pulmao$Sexo,rho=0)
+
+
+```
+
+#  calculando o Teste Log Rank para os Grupos de  Extensão
+
+
+Adenocarcinoma. Os adenocarcinomas começam nas células que revestem os alvéolos e produzem substâncias como muco. Esse tipo de câncer de pulmão ocorre principalmente em fumantes e ex-fumantes, mas também é o tipo mais comum em não fumantes. É mais frequente em mulheres do que em homens, e é mais propenso a ocorrer em pessoas mais jovens do que outros tipos de câncer de pulmão. O adenocarcinoma é normalmente encontrado nas áreas externas do pulmão. Ele tende a crescer mais lentamente do que os outros tipos de câncer de pulmão, e tem mais chance de ser diagnosticado antes de se disseminar.
+
+Logo, será nosso grupo de referência
+```{r,warning=FALSE}
+#colnames(pulmao)[14]<-'Extensão'
+library(tidyverse)
+library(survival)
+teste1<- pulmao %>% filter(Extensão != "METÁSTASE" )
+grupo2<- pulmao %>% filter(Extensão != "LOCALIZADO" )
+caso3<- pulmao %>% filter(Extensão != "IN SITU" )
+
+#survdiff(Surv(pulmao$meses,pulmao$falhas)~pulmao$Extensão,rho=0)
+```
+# grupo 1 vs Grupo 2
+
+```{r,warning=FALSE}
+survdiff(Surv(teste1$meses,teste1$falhas)~teste1$Extensão,rho=0)
+```
+ A 5% de significância rejeita-se a hipótese $H_0$ ,logo, não existe diferença entre as curvas de sobrevivência dos grupos IN SITU e do grupo localizado.
+
+
+# grupo 1 vs Grupo 2
+
+```{r,warning=FALSE}
+survdiff(Surv(grupo2$meses,grupo2$falhas)~grupo2$Extensão,rho=0)
+```
+ A 5% de significância rejeita-se a hipótese $H_0$ ,logo, não existe diferença entre as curvas de sobrevivência dos grupos IN SITU e do grupo metástase.
+ 
+ 
+# grupo 2 vs Grupo 3
+```{r,warning=FALSE}
+survdiff(Surv(caso3$meses,caso3$falhas)~caso3$Extensão,rho=0)
+
+```
+ Logo ,rejeita-se a hipótese nula  a 5% de significância, ou seja, as curvas de sobrevivencia apresentaram diferença significativa. 
+ 
+
+
+
+#  Ajustes de modelos 
+
+## Teste da Razão de Verossimilhança
+ 
+ É conhecido que existem tecnicas gráficas  que são bastante uteis na seleção de modelos . Entretanto,  conclusões a partir delas podem diferir para diferentes
+analistas. Ou seja, existem nas técnicas gráficas um componente subjetivo na sua
+interpretaçao. Outra forma de selecionar  modelos é através de testes de hipóteses,
+ Onde as hipóteses a serem testadas são:
+ 
+ 
+ $H_0:$ o modelo de interece é adequado   
+ 
+ $H_1:$  O modleo escolhido não é adequado.
+ 
+ 
+```{r,echo=FALSE}
+# ajust1<-survreg(Surv(pulmao$meses,pulmao$falhas)~1,
+#                 dist="exponential") 
+# #ajust1
+# alpha<- exp(ajust1$coefficients[1])
+# #alpha
+# alpha<- round(exp(ajust1$coefficients[1]),2)
+# alpha
+# 
+# ajust2<- survreg(Surv(pulmao$meses,pulmao$falhas)~1,
+#                  dist="weibull")
+# #ajust2
+# alpha<-exp(ajust2$coefficients[1])
+# gama<-round(1/ajust2$scale,2)
+# cbind(gama, alpha)
+# 
+# ajust3<-survreg(Surv(pulmao$meses,pulmao$falhas)~1,
+#                 dist="lognorm") 
+# gama<-round(1/ajust2$scale,2)
+# 
+# alpha1<- exp(ajust1$coefficients[1])
+# 
+# time<-ek$time
+# st<-ek$surv
+# ste<-exp(-(time/alpha1))
+# scale_ajust3<-round(ajust3$scale,2)
+# alphaajust3<-round(ajust3$coefficients,2)
+# alpha_ajust2<-round(exp(ajust2$coefficients[1]),2)
+# #Ste <- exp(-(time/alpha_ajust2))
+# stw<-exp(-(time/alpha_ajust2)^gama)
+# stln<-pnorm((-log(time)+ alphaajust3)/scale_ajust3)
+# #cbind(time,st,ste,stw,stln)
+# cbind(time,st,stexp,stwei,stlnoln)
+# 
+# 
+# glimpse(pulmao$meses)
+# 
+# library(flexsurv)
+# ajust4<-flexsurvreg(Surv(as.integer(pulmao$dias),pulmao$falhas)~1,
+#                 dist="gengamma")
+# #ajust4
+
+# TRV
+
+# As hipóteses podem ser resumidas 
+# H_0: O modelo escolhido é adequado
+
+
+
+
+library(lmtest)
+
+# lrtest(ajust1,ajust4)
+# lrtest(ajust2,ajust4)
+# lrtest(ajust3,ajust4)
+# H_1: O modleo escolhido não é adequado. 
+
+# Calculando analiticamente
+# 
+# 
+# par(mfrow=c(1,2))
+# plot(ek, conf.int=F, xlab="Tempos", 
+#      ylab="S(t)")
+# lines(c(0,time),c(1,stw), lty=2)
+# legend(25,0.8,lty=c(1,2),
+#        c("Kaplan-Meier", "Weibull"),
+#        bty="n",cex=0.8)
+# plot(ek, conf.int=F, xlab="Tempos", ylab="S(t)")
+# lines(c(0,time),c(1,stln), lty=2)
+# legend(25,0.8,lty=c(1,2),
+#        c("Kaplan-Meier", "Log-normal"),
+#        bty="n",cex=0.8)
+# 
+# 
+# 
+# plot(ek, conf.int=F, xlab="Tempos", ylab="S(t)")
+# lines(c(0,time),c(1,ste), lty=2)
+# legend(25,0.8,lty=c(1,2),
+#        c("Kaplan-Meier", "exponencial"),
+#        bty="n",cex=0.8)
+```
+
+
+```{r}
+
+
+
+# H_1: O modleo escolhido não é adequado. 
+ekm <- survfit(Surv(pulmao$meses,pulmao$falhas)~1)
+ajust1<-survreg(Surv(pulmao$meses,pulmao$falhas)~1,dist='exponential')
+fit_exp<- ajust1
+
+alpha<-exp(ajust1$coefficients[1])
+alpha
+ajust2<-survreg(Surv(pulmao$meses,pulmao$falhas)~1,dist='weibull')
+fit_wei <-ajust2
+alpha2<-exp(ajust2$coefficients[1])
+gama<-1/ajust2$scale
+
+ ajust3<-survreg(Surv(pulmao$meses,pulmao$falhas)~1,dist='lognorm')
+ # ajust7<-survreg(Surv(pulmao$meses,pulmao$falhas)~+factor(pulmao$Sexo)+factor(pulmao$Extensão),dist='lognorm')
+
+fit_log<- ajust3
+
+mi<-ajust3$coefficients
+sigmaa<-ajust3$scale
+library(flexsurv)
+ajust4<-flexsurvreg(Surv(as.integer(pulmao$dias),pulmao$falhas)~1,
+                 dist="gengamma")
+
+fit_gammagen<-ajust4
+ajust5<-flexsurvreg(Surv(as.integer(pulmao$dias),pulmao$falhas)~1,
+                 dist="gamma")
+
+fit_gamma <-ajust5
+
+
+lrtest(ajust1,ajust4)
+lrtest(ajust2,ajust4)
+lrtest(ajust3,ajust4)
+
+time<-ekm$time
+st<-ekm$surv
+stexp<- exp(-time/alpha)
+stwei<- exp(-(time/alpha2)^gama)
+stlnoln<- pnorm((-log(time)+ mi)/sigmaa)
+# cbind(time,st,stexp,stwei,stlnoln)
+
+
+
+par(mfrow=c(2,2))
+plot(ek, conf.int=F, xlab="Tempos", 
+     ylab="S(t)")
+lines(c(0,time),c(1,stwei), lty=2)
+legend(25,0.8,lty=c(1,2),
+       c("Kaplan-Meier", "Weibull"),
+       bty="n",cex=0.8)
+plot(ek, conf.int=F, xlab="Tempos", ylab="S(t)")
+lines(c(0,time),c(1,stlnoln), lty=2)
+legend(25,0.8,lty=c(1,2),
+       c("Kaplan-Meier", "Log-normal"),
+       bty="n",cex=0.8)
+
+
+
+plot(ek, conf.int=F, xlab="Tempos", ylab="S(t)")
+lines(c(0,time),c(1,stexp), lty=2)
+legend(25,0.8,lty=c(1,2),
+       c("Kaplan-Meier", "exponencial"),
+       bty="n",cex=0.8)
+
+
+
+#========================================================================
+# par(bg = '#1b1a3d')
+# 
+# par(mfrow=c(2,2))
+# 
+# plot(ek, conf.int=F, xlab="Tempos", 
+#      ylab="S(t)", 
+#      col = "white",
+#      col.main = "white",     # Title color
+#      col.sub = "white",       # Subtitle color
+#      col.lab = "white",    # X and Y-axis labels color     
+#      col.axis = "white",   # Tick labels color
+#      fg = "white")
+# lines(c(0,time),c(1,stwei), lty=2,col = "white")
+# legend(25,0.8,lty=c(1,2),
+#        c("Kaplan-Meier", "Weibull"),
+#        bty="n",cex=0.8,col = "white",
+#        text.col = "white")
+# 
+# 
+# plot(ek, conf.int=F, xlab="Tempos", ylab="S(t)",
+#       col = "white",
+#      col.main = "white",     # Title color
+#      col.sub = "white",       # Subtitle color
+#      col.lab = "white",    # X and Y-axis labels color     
+#      col.axis = "white",   # Tick labels color
+#      fg = "white")
+# lines(c(0,time),c(1,stlnoln), lty=2,col = "white")
+# legend(25,0.8,lty=c(1,2),
+#        c("Kaplan-Meier", "Log-normal"),
+#        bty="n",cex=0.8,col = "white",text.col = "white")
+# 
+# 
+# 
+# plot(ek, conf.int=F, xlab="Tempos", ylab="S(t)",
+#       col = "white",
+#      col.main = "white",     # Title color
+#      col.sub = "white",       # Subtitle color
+#      col.lab = "white",    # X and Y-axis labels color     
+#      col.axis = "white",   # Tick labels color
+#      fg = "white")
+# lines(c(0,time),c(1,stexp), lty=2, col ="white")
+# legend(25,0.8,lty=c(1,2),
+#        c("Kaplan-Meier", "exponencial"),
+#        bty="n",cex=0.8,col = "white",text.col = "white")
+
+
+anova(ajust1,ajust3)
+
+
+anova(ajust2,ajust3)
+# plot(ek, conf.int=F, xlab="Tempos", ylab="S(t)")
+# lines(c(0,time),c(1,stexp), lty=2)
+# legend(25,0.8,lty=c(1,2),
+#        c("Kaplan-Meier", "exponencial"),
+#        bty="n",cex=0.8)
+# 
+# Modelo = c("Gama Generalizado", "Exponencial", "Log-Normal", "Weibull", "gamma")
+# Verossimilhanca = c(fit_gammagen$loglik, unique(fit_exp$loglik), unique(fit_log$loglik), unique(fit_wei$loglik), fit_gamma$loglik)
+# TRV = 2*(fit_gammagen$loglik-Verossimilhanca)
+# valor_p = pchisq(TRV,df=2,lower.tail=FALSE) #%>% round(2)
+# 
+# resultado = data.frame(Modelo=Modelo, 
+#                        Verossimilhanca = Verossimilhanca, 
+#                        TRV=TRV, 
+#                        valor_p=valor_p)
+# 
+# ggpubr::ggtexttable(resultado, rows=NULL)
+
+
+```
+
+
+```{r}
+
+
+ekm <- survfit(Surv(pulmao$meses,pulmao$falhas)~1)
+ajust1<-survreg(Surv(pulmao$meses,pulmao$falhas)~1,dist='exponential')
+alpha<-exp(ajust1$coefficients[1])
+alpha
+
+ajust2<-survreg(Surv(pulmao$meses,pulmao$falhas)~1,dist='weibull')
+alpha2<-exp(ajust2$coefficients[1])
+gama<-1/ajust2$scale
+
+ajust3<-survreg(Surv(pulmao$meses,pulmao$falhas)~1,dist='lognorm')
+mi<-ajust3$coefficients
+sigmaa<-ajust3$scale
+
+time<-ekm$time
+st<-ekm$surv
+stexp<- exp(-time/alpha)
+stwei<- exp(-(time/alpha2)^gama)
+stlnoln<- pnorm((-log(time)+ mi)/sigmaa)
+#cbind(time,st,stexp,stwei,stlnoln)
+
+
+#gráficos
+par(mfrow=c(1,3))
+plot(stexp,st,pch=16,ylim = (c(0,1)), xlim = (c(0,1)), 
+     ylab = "S(t): Kaplan-Meier", xlab="S(t): exponencial")
+lines(c(0,1), c(0,1), type="l", lty=1)
+
+plot(stwei,st,pch=16,ylim = (c(0,1)), xlim = (c(0,1)), 
+     ylab = "S(t): Kaplan-Meier", xlab="S(t): Weibull")
+lines(c(0,1), c(0,1), type="l", lty=1)
+
+plot(stlnoln,st,pch=16,ylim = (c(0,1)), xlim = (c(0,1)), 
+     ylab = "S(t): Kaplan-Meier", xlab="S(t): log-normal")
+lines(c(0,1), c(0,1), type="l", lty=1)
+
+
+
+
+
+
+
+# par(mfrow=c(1,3))
+# par(bg = '#1b1a3d')
+# plot(stexp,st,pch=16,ylim = (c(0,1)), xlim = (c(0,1)), 
+#      ylab = "S(t): Kaplan-Meier", xlab="S(t): exponencial",
+#      col ="white",
+#      col.main = "white",     # Title color
+#     col.sub = "white",       # Subtitle color
+#     col.lab = "white",    # X and Y-axis labels color
+#     col.axis = "white",   # Tick labels color
+#     fg = "white")
+# lines(c(0,1), c(0,1), type="l", lty=1,col= "white")
+# 
+# 
+# plot(stwei,st,pch=16,ylim = (c(0,1)), xlim = (c(0,1)), 
+#      ylab = "S(t): Kaplan-Meier", xlab="S(t): Weibull", 
+#      col ="white",
+#      col.main = "white",     # Title color
+#     col.sub = "white",       # Subtitle color
+#     col.lab = "white",    # X and Y-axis labels color
+#     col.axis = "white",   # Tick labels color
+#     fg = "white")
+# lines(c(0,1), c(0,1), type="l", lty=1, col ="white")
+# 
+# plot(stlnoln,st,pch=16,ylim = (c(0,1)), xlim = (c(0,1)), 
+#      ylab = "S(t): Kaplan-Meier", xlab="S(t): log-normal",
+#      col ="white",
+#      col.main = "white",     # Title color
+#     col.sub = "white",       # Subtitle color
+#     col.lab = "white",    # X and Y-axis labels color
+#     col.axis = "white",   # Tick labels color
+#     fg = "white")
+# lines(c(0,1), c(0,1), type="l", lty=1, col ="white")
+```
+
+
+```{r}
+# require(survival)
+# ekm <- survfit(Surv(tempos,cens)~1)
+# tempos<-c(3,5,6,7,8,9,10,10,12,15,15,18,19,20,22,25,28,30,40,45)
+# cens<-c(1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0)
+# 
+# 
+# 
+# ajust1<-survreg(Surv(tempos,cens)~1,dist='exponential')
+# alpha<-exp(ajust1$coefficients[1])
+# alpha
+# 
+# ajust2<-survreg(Surv(tempos,cens)~1,dist='weibull')
+# alpha2<-exp(ajust2$coefficients[1])
+# gama<-1/ajust2$scale
+# 
+# ajust3<-survreg(Surv(tempos,cens)~1,dist='lognorm')
+# mi<-ajust3$coefficients
+# sigmaa<-ajust3$scale
+# 
+# time<-ekm$time
+# st<-ekm$surv
+# stexp<- exp(-time/alpha)
+# stwei<- exp(-(time/alpha2)^gama)
+# stlnoln<- pnorm((-log(time)+ mi)/sigmaa)
+# cbind(time,st,stexp,stwei,stlnoln)
+# 
+# 
+# #gráficos
+# par(mfrow=c(1,3))
+# plot(stexp,st,pch=16,ylim = (c(0,1)), xlim = (c(0,1)), 
+#      ylab = "S(t): Kaplan-Meier", xlab="S(t): exponencial")
+# lines(c(0,1), c(0,1), type="l", lty=1)
+# 
+# plot(stwei,st,pch=16,ylim = (c(0,1)), xlim = (c(0,1)), 
+#      ylab = "S(t): Kaplan-Meier", xlab="S(t): Weibull")
+# lines(c(0,1), c(0,1), type="l", lty=1)
+# 
+# plot(stln,st,pch=16,ylim = (c(0,1)), xlim = (c(0,1)), 
+#      ylab = "S(t): Kaplan-Meier", xlab="S(t): log-normal")
+# lines(c(0,1), c(0,1), type="l", lty=1
+```
+ 
+
+
+
+# Modelo de Cox
+
+  um dos pressupostos do modelo de cox é a independência das curvas de sobrevivência 
+  , ou seja , as curvas não podem se cruzar , logo , apenas a variável sexo pode ser uma covariavel do modelo .
+```{r}
+
+# cox <- coxph(Surv(meses,falhas)~Sexo,
+#              data = pulmao)
+# 
+# summary(cox)
+
+
+
+
+
+cox <- coxph(Surv(meses,falhas)~Sexo,
+             data = pulmao)
+
+summary(cox)
+```
+
+  Após as analises verificamos que  a variável extensão não é significativa para o modelo ,
+  segundo o nosso modelo , os pacientes do sexo masculino  possui 0.22 vezes  maior a probabilidade por morte por cancer no pulmão
+  
+  
+```{r}
+
+library(tidyverse)
+# residuals(cox,type="scaledsch")
+teste_ph <- cox.zph(cox)
+par(mfrow=c(2,3))
+teste_ph$table %>% round(3) %>% ggpubr::ggtexttable()
+```
+  
+
+```{r}
+
+#install.packages("survminer")
+library("survminer")
+testph<-cox.zph(cox)
+ggcoxzph(testph)
+ggcoxzph(teste_ph, ggtheme = theme_bw())
+```
+
+
+```{r}
+
+par(mfrow=c(1,2))
+mart<-residuals(cox,type="martingale")
+dev<-residuals(cox,type="deviance")
+plot(mart,ylab="res",pch=20)
+title("Resíduos Martingale")
+plot(dev,ylab="res",pch=20)
+title("Resíduos Deviance")
+
+```
+```{r}
+ggcoxdiagnostics(cox, type = "dfbeta",
+                 linear.predictions = FALSE, ggtheme = theme_bw())
+
+
+
+ggcoxdiagnostics(cox, type = "deviance",
+                 linear.predictions = FALSE, ggtheme = theme_bw())
+
+```
+
+
+Podemos obervar que nossos resíduos não seguem  o comportamento espero , logo o modelo de cox aparentimente não é auto explicativo para os nosso dados  , entretanto, após algumas pesquisas encontramos uma distribuição para dados não-lineares que  aparentimente apresenta um bom ajuste aos dados.
+
+
+
+#  Distribuição de Gompertz
+
+
+ distribuição de Gompertz é uma distribuição de probabilidade contínua , nomeada em homenagem a Benjamin Gompertz . A distribuição de Gompertz é freqüentemente aplicada para descrever a distribuição da expectativa de vida de adultos por demógrafos e atuários .  Campos da ciência relacionados, como biologia e gerontologia, também consideraram a distribuição de Gompertz para a análise de sobrevivência. Mais recentemente, os cientistas da computação também começaram a modelar as taxas de falha do código de computador pela distribuição Gompertz. 
+
+
+```{r}
+library(survminer)
+library(flexsurv)
+gomp<-flexsurvreg(Surv(pulmao$meses,pulmao$falhas)~1, data=pulmao, dist= "gompertz")
+
+ survminer::ggflexsurvplot(gomp) 
+```
+
+
+Aparentimente observando pelo  gráfico acima o modelo de  Gompertz parece se ajustar de formar mais adequada aos nossos dados, vamos observar como ficaria um possível modelo final levando em consideração fatores que foram significativos  anteriormente ou ficaram na região de aceitação ou rejeição pelo motivo do pvalor ter dado muito próximo a 0.05.
+
+```{r}
+library(survminer)
+library(flexsurv)
+gomp<-flexsurvreg(Surv(pulmao$meses,pulmao$falhas)~Sexo
+                  , data=pulmao, dist= "gompertz")
+
+ survminer::ggflexsurvplot(gomp) 
+```
+
+Pelo gráfico podemos observar que  o modelo se ajusta melhor aos dados referente ao sexo masculo do que  os dados referente ao sexo feminino,talvez isso acontece por temos uma maior quantidade de informações sobre o sexo masculino em nossos dados em relação ao sexo feminino 
+
+```{r}
+table(pulmao$Sexo)
+```
+
+
+
+
+
+# Conclusão 
+
+ Após varias análise  concluimos que os modelos de distribuição de probabibilidades ,
+ Exponencial, Weibull e Log Normal não se ajustaram adequadamente aos dados, o mesmo aconteceu com o modelo de cox , a opção mais viável seria  o modelo para dados não lineares 
+baseado na distribuição de  Gompertz,mas isso necessitaria de uma análise mais profunda.
+Contudo, observamos que o grupo masculino  tem uma menor probabilidade de sobrevivência se comparado ao grupo feminino ao longo do tempo , o mesmo acontece para os pacientes que  estão   com câncer   no pulmão em metástase, que tem uma menor probabilidade de sobrevivência se comparado aos pacientes que possui câncer no pulmao IN SITU e  os pacientes com câncer no pulmão Localizado.
+ 
+# Referências 
+
+Bemmaor, Albert C .; Glady, Nicolas (2011). "Implementando o modelo Gamma / Gompertz / NBD no MATLAB" (PDF) . Cergy-Pontoise: ESSEC Business School.
+
+
+
+Colosimo,Enrico Antôni.;Giolo.Suely Ruiz. "Análise de Sobrevivência Aplicada" (PDF) . 2006
+
+Gompertz, B. (1825). "Sobre a natureza da função expressiva da lei da mortalidade humana e sobre um novo modo de determinar o valor das contingências da vida" . Philosophical Transactions of the Royal Society of London . 115 : 513–583. doi : 10.1098 / rstl.1825.0026 . JSTOR  107756 
+
+
+Johnson, Norman L .; Kotz, Samuel; Balakrishnan, N. (1995). Distribuições univariadas contínuas . 2 (2ª ed.). Nova York: John Wiley & Sons. pp. 25–26. ISBN 0-471-58494-0.

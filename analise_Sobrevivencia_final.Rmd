@@ -1,0 +1,306 @@
+---
+title: "projeto final-analise de sobrevivencia"
+author: "joseferson da silva barreto"
+date: '2022-07-08'
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+
+## Objetivo
+
+ajustar um modelo de sobrevivência  capaz de explicar as relações entre o tempo até o aparecimento de cancer
+
+
+## Metodologia 
+
+aqui vou colocar as informações sobre as metodologias utilizadas 
+
+
+
+
+# Análises 
+
+## Carregando o Banco de Dados 
+
+```{r}
+library(tidyverse)
+
+library(plotly)
+library(readxl)
+
+dados<-read.csv("base_nao_identificada_1832.csv",sep = ";",encoding = "latin1")
+
+
+# dados$Data.do.Óbito-dados$Data.de.Diagnostico
+
+library(lubridate)
+  
+# (day( as.Date(dados$Data.do.Óbito)) - day(as.Date( dados$Data.de.Diagnostico)))
+  # 
+  # 
+  # 
+  # (( as.Date(dados$Data.do.Óbito)) - (as.Date( dados$Data.de.Diagnostico)))
+
+
+# (month( as.Date(dados$Data.do.Óbito)) - month(as.Date( dados$Data.de.Diagnostico)))
+# 
+# floor_date(as.Date(dados$Data.do.Óbito),"month")
+# 
+# mdy(dados$Data.do.Óbito)
+
+
+
+```
+
+```{r}
+dados %>%
+ # dplyr::select(where(is.factor)) %>% 
+  glimpse()
+
+pulmao<-dados %>% 
+  dplyr::filter(Descrição.da.Topografia =="PULMAO, SOE")
+
+pulmao$falhas<-pulmao$Tipo.do.Obito
+pulmao$falhas[pulmao$falhas == "CÂNCER"] <- "1"
+pulmao$falhas[pulmao$falhas == "NÃO CÂNCER"] <- "0"
+pulmao$falhas[pulmao$falhas == "SEM INFORMAÇÃO"] <- "0"
+pulmao$falhas[pulmao$falhas == ""] <- "0"
+
+table(pulmao$falhas)
+
+
+```
+
+
+# fazendo a analise descritiva
+
+```{r}
+pulmao %>%
+  dplyr::select(where(is.character)) %>% 
+  glimpse()
+
+# =====================================================
+#   posiveis fatores 
+# ======================================================
+#   
+# # fatores
+#   
+#   sexo
+#   grau de instrução
+#   Estado civil 
+#   nome.profissão
+#   raca.cor 
+#   nacionalidade 
+#   cidade.endereço
+  # Descrição.da.Doenca.Infantil
+  # Código.da.Doenca.Infantil
+  # Indicador.de.Caso.Raro
+  # Meio.de.Diagnostico
+  # Status.Vital
+  # Metástase.à.distância
+
+
+pulmao %>%
+  dplyr::select(where(is.numeric)) %>% 
+  glimpse()
+
+#  obs
+# ==============
+#  Código.do.Paciente que está sendo identificada como uma variável número na verdade 
+#  é o do tipo texto ,ou seja não é um valor quantitativo 
+#  vamos converter essa variável 
+pulmao$Código.do.Paciente<-as.character(pulmao$Código.do.Paciente)
+
+# codigo da profissão tbm é apenas um codigo
+
+pulmao$Código.Profissão<-as.character(pulmao$Código.Profissão)
+
+
+
+pulmao %>%
+  dplyr::select(where(is.numeric)) %>% 
+  glimpse()
+
+
+# fazendo o mesmo para código da morfologia 
+
+
+pulmao$Código.da.Morfologia<-as.character(pulmao$Código.da.Morfologia)
+
+pulmao %>%
+  dplyr::select(where(is.numeric)) %>% 
+  glimpse()
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+
+```{r}
+#pulmao %>% select(Idade) %>% table()
+```
+
+## Convertendo os possíveis fatores 
+
+
+```{r}
+#   sexo
+#   grau de instrução
+#   Estado civil 
+#   nome.profissão
+#   raca.cor 
+#   nacionalidade 
+#   cidade.endereço
+  # Descrição.da.Doenca.Infantil
+  # Código.da.Doenca.Infantil
+  # Indicador.de.Caso.Raro
+  # Meio.de.Diagnostico
+  # Status.Vital
+  # Metástase.à.distância
+
+
+pulmao$Sexo<- as.factor(pulmao$Sexo)
+
+glimpse(pulmao)
+
+#c(pulmao$Sexo,pulmao$Nacionalidade)<-lapply(c(pulmao$Sexo,pulmao$Nacionalidade), as.factor)
+
+pulmao$Nacionalidade<- as.factor(pulmao$Nacionalidade)
+pulmao$Raca.Cor<- as.factor(pulmao$Raca.Cor)
+pulmao$Naturalidade<- as.factor(pulmao$Naturalidade)
+
+pulmao$Grau.de.Instrução<- as.factor(pulmao$Grau.de.Instrução)
+
+pulmao$Estado.Civil<- as.factor(pulmao$Estado.Civil)
+
+pulmao %>%  select(
+ Descrição.da.Morfologia
+)  %>% table()
+
+pulmao$Descrição.da.Morfologia<- as.factor(pulmao$Descrição.da.Morfologia)
+pulmao %>%  select(
+ Descrição.da.Doenca
+)  %>% table()
+
+
+pulmao$Descrição.da.Doenca<- as.factor(pulmao$Descrição.da.Doenca)
+pulmao$Descrição.da.Doenca.Adulto.Jovem<- as.factor(pulmao$Descrição.da.Doenca.Adulto.Jovem)
+pulmao$Descrição.da.Doenca.Infantil<- as.factor(pulmao$Descrição.da.Doenca.Infantil)
+pulmao$Indicador.de.Caso.Raro<- as.factor(pulmao$Indicador.de.Caso.Raro)
+pulmao$Meio.de.Diagnostico<- as.factor(pulmao$Meio.de.Diagnostico)
+pulmao$Extensão<- as.factor(pulmao$Extensão)
+pulmao$Tipo.do.Obito<- as.factor(pulmao$Tipo.do.Obito)
+pulmao$Nome.Profissão<- as.factor(pulmao$Nome.Profissão)
+
+glimpse(pulmao)
+```
+
+
+#  Convertendo as variáveis  de datas 
+
+```{r}
+pulmao$Data.de.Nascimento<- as.Date(pulmao$Data.de.Nascimento)
+
+pulmao$Data.de.Último.Contato<- as.Date(pulmao$Data.de.Último.Contato)
+
+pulmao$Data.de.Diagnostico<- as.Date(pulmao$Data.de.Diagnostico)
+
+pulmao$Data.do.Óbito<- as.Date(pulmao$Data.do.Óbito)
+
+table(pulmao$Data.de.Último.Contato)
+
+glimpse(dados)
+
+
+library(lubridate)
+# t<-pulmao %>%
+#   dplyr::select(where(is.Date)) 
+  
+
+pulmao <-pulmao %>% arrange(Data.do.Óbito)
+pulmao$teste<-floor_date(mdy(pulmao$Data.do.Óbito),"month")
+
+# pulmao %>% filter(Data.do.Óbito>Data.de.Último.Contato,1,0 ) 
+
+pulmao$tempo <- pulmao$Data.do.Óbito
+
+pulmao$mes<-( month(as.Date( pulmao$Data.de.Diagnostico))-month( as.Date(pulmao$Data.do.Óbito)) )
+
+
+Data.do.Óbito=(as.Date('31/12/2016')-as.Date(pulmao$Data.de.Diagnostico) )
+
+
+fazendo a transformação
+
+pulmao<-pulmao %>% arrange(Tipo.do.Obito)
+
+
+
+t=  pulmao %>% dplyr::filter(pulmao$Tipo.do.Obito== '')
+ po=  pulmao %>% dplyr::filter(pulmao$Tipo.do.Obito !='')
+ 
+
+ t$meses<- (as.Date('21/07/2018')-as.Date(t$Data.de.Diagnostico) )
+ 
+month(as.Date("2018/07/21", format = "%Y/%m/%d"))
+ month(t$meses)
+ 
+t$mes<-round(t$mes/30,0)
+#month(as.Date( t$Data.de.Diagnostico, format = "%d/%m/%Y"))
+po$Data.do.Óbito<-as.Date(po$Data.do.Óbito)
+po$Data.de.Diagnostico<-as.Date(po$Data.de.Diagnostico)
+po$mes <- (as.Date(po$Data.do.Óbito)-as.Date(po$Data.de.Diagnostico))
+
+po$mes<-round(po$mes/30,0)
+
+(ymd(as.Date(po$Data.do.Óbito))-ymd(as.Date(po$Data.de.Diagnostico)))/12
+s<-
+
+  
+  floor_date(sum(po$Data.do.Óbito-po$Data.de.Diagnostico),"month")
+pulmao$mes<-c(t$mes,po$mes)
+
+pulmao$mes<-as.numeric(pulmao$mes)
+
+
+sum(po$Data.do.Óbito-po$Data.de.Diagnostico)
+```
+```{r}
+pulmao<-pulmao %>% arrange(Data.de.Último.Contato)
+
+pulmao<-pulmao %>% arrange(Data.do.Óbito)
+
+
+
+t=  pulmao %>% dplyr::filter(pulmao$Data.do.Óbito== '')
+ po=  pulmao %>% dplyr::filter(pulmao$Data.do.Óbito!='')
+ 
+
+# t$meses<- (as.Date('21/07/2018')-as.Date(t$Data.de.Diagnostico) )
+ round(difftime(as.Date("31/12/2016",format = "%Y/%m/%d"), as.Date(dados$Data.de.Diagnostico,format = "%Y/%m/%d"), units = "weeks")/4.5,0)
+ 
+ t$meses<-round(difftime(as.Date("31/12/2016",format = "%Y/%m/%d"), as.Date(t$Data.de.Diagnostico,format = "%Y/%m/%d"), units = "weeks")/4.5,0)
+ 
+month(as.Date("2018/07/21", format = "%Y/%m/%d"))
+ month(t$meses)
+ #as.Date("31/12/2016")
+ #31/12/2016
+#t$mes<-round(t$mes/30,0)
+#month(as.Date( t$Data.de.Diagnostico, format = "%d/%m/%Y"))
+po$Data.do.Óbito<-as.Date(po$Data.do.Óbito)
+po$Data.de.Diagnostico<-as.Date(po$Data.de.Diagnostico)
+po$mes <- round(difftime(as.Date(po$Data.do.Óbito,format = "%Y/%m/%d"), as.Date(po$Data.de.Diagnostico,format = "%Y/%m/%d"), units = "weeks")/4.5,0) 
+
+po$mes<-round(po$mes/30,0)
+
+round(difftime(as.Date("31/12/2016",format = "%Y/%m/%d"), as.Date(dados$Data.de.Diagnostico,format = "%Y/%m/%d"), units = "weeks")/4,0)
+```
+
